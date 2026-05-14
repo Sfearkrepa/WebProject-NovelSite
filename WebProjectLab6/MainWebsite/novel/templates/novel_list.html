@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load novel_filters %}   <!-- Подключаем пользовательские фильтры -->
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1 class="topic-text">{{ title }}</h1>
+
+    <!-- Передача данных из views.py + использование фильтров -->
+    <p>
+        Страница: <strong>{{ page }}</strong> |
+        Найдено:
+        <strong>{{ total_novels|ru_plural:"новелла,новеллы,новелл" }}</strong> |
+        Год: {{ current_year }}
+    </p>
+
+    {% if is_empty %}
+        <p class="content-text">К сожалению, список новелл пока пуст.</p>
+    {% else %}
+        <ul class="content-table">
+            {% for novel in novels %}
+                <li>
+                    <a href="{% url 'novel_detail' slug=novel.title|slugify %}">
+                        {{ novel.title|default:"Без названия" }}
+                    </a>
+
+                    <!-- Использование встроенных фильтров -->
+                    <p class="content-text">
+                        {{ novel.body|truncatewords:25|linebreaksbr }}
+                    </p>
+
+                    <small>
+                        ID: {{ novel.id }} |
+                        Длина описания: {{ novel.body|length }} символов
+                    </small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'home' %}" class="control">← На главную</a>
+
+    <!-- Пример условного тега -->
+    {% if page > 1 %}
+        <p><strong>Вы просматриваете страницу {{ page }}.</strong></p>
+    {% endif %}
+</div>
+{% endblock %}

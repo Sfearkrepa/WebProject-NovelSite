@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Добро пожаловать{% endblock %}</title>
+
+    <!-- Подключение статических файлов -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="logo"></div>
+        <nav>
+            <ul class="mainmenu">
+                <li><a href="{% url 'home' %}">Главная</a></li>
+                <li><a href="{% url 'novel_list' %}">Список новелл</a></li>
+                <li><a href="{% url 'author_list' %}">Писатели</a></li>
+                <li><a href="{% url 'ratings' %}">Оценки</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Содержимое страниц будет здесь -->
+        {% endblock %}
+    </main>
+
+    <footer id="footer">
+        <p>&copy; 2026 MainWebsite. Все права защищены.</p>
+
+        <!-- Пользовательский тег: текущее время -->
+        {% load novel_tags %}
+        <p>Текущее время: {% current_time %}</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
