@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Добро пожаловать{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1 class="topic-text">Добро пожаловать</h1>
+    
+    <a href="{% url 'novel_list' %}">
+        <div class="card">Список новелл<br><small>Просмотреть все новеллы</small></div>
+    </a>
+    
+    <a href="{% url 'author_list' %}">
+        <div class="card">Писатели<br><small>Информация об авторах</small></div>
+    </a>
+    
+    <a href="{% url 'ratings' %}">
+        <div class="card">Оценки<br><small>Рейтинги новелл</small></div>
+    </a>
+    
+    <a href="{% url 'go_novels' %}">
+        <div class="card" style="background:#e8f5e9;">
+            Перейти к новеллам (через redirect)
+        </div>
+    </a>
+</div>
+{% endblock %}

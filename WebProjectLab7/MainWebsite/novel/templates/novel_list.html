@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1 class="topic-text">{{ title }}</h1>
+
+    <p>Всего новелл в базе: <strong>{{ total_novels }}</strong></p>
+
+    <!-- Фильтры по менеджеру -->
+    <div style="margin: 15px 0;">
+        <a href="{% url 'novel_list' %}?filter=all"
+           style="padding: 8px 14px; margin-right: 5px; text-decoration: none; background: {% if filter_type == 'all' %}#007bff{% else %}#f0f0f0{% endif %}; color: {% if filter_type == 'all' %}white{% else %}black{% endif %}; border-radius: 5px;">
+            Все
+        </a>
+        <a href="{% url 'novel_list' %}?filter=published"
+           style="padding: 8px 14px; margin-right: 5px; text-decoration: none; background: {% if filter_type == 'published' %}#007bff{% else %}#f0f0f0{% endif %}; color: {% if filter_type == 'published' %}white{% else %}black{% endif %}; border-radius: 5px;">
+            Опубликованные
+        </a>
+        <a href="{% url 'novel_list' %}?filter=completed"
+           style="padding: 8px 14px; margin-right: 5px; text-decoration: none; background: {% if filter_type == 'completed' %}#28a745{% else %}#f0f0f0{% endif %}; color: {% if filter_type == 'completed' %}white{% else %}black{% endif %}; border-radius: 5px;">
+            Завершённые
+        </a>
+        <a href="{% url 'novel_list' %}?filter=popular"
+           style="padding: 8px 14px; margin-right: 5px; text-decoration: none; background: {% if filter_type == 'popular' %}#ffc107{% else %}#f0f0f0{% endif %}; color: {% if filter_type == 'popular' %}black{% else %}black{% endif %}; border-radius: 5px;">
+            Популярные (≥50 глав)
+        </a>
+    </div>
+
+    <!-- Поиск и сортировка -->
+    <div style="margin: 20px 0; padding: 15px; background: #f8f8f8; border-radius: 8px;">
+        <form method="get" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="hidden" name="filter" value="{{ filter_type }}">
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Поиск..."
+                   style="padding: 8px; width: 280px;">
+
+            <select name="sort" style="padding: 8px;">
+                <option value="-published_date" {% if sort_by == '-published_date' %}selected{% endif %}>Новейшие</option>
+                <option value="published_date" {% if sort_by == 'published_date' %}selected{% endif %}>Старые</option>
+                <option value="-chapters_count" {% if sort_by == '-chapters_count' %}selected{% endif %}>Больше глав</option>
+                <option value="chapters_count" {% if sort_by == 'chapters_count' %}selected{% endif %}>Меньше глав</option>
+                <option value="title" {% if sort_by == 'title' %}selected{% endif %}>По названию (А-Я)</option>
+                <option value="-title" {% if sort_by == '-title' %}selected{% endif %}>По названию (Я-А)</option>
+                <option value="author" {% if sort_by == 'author' %}selected{% endif %}>По автору</option>
+                <option value="status" {% if sort_by == 'status' %}selected{% endif %}>По статусу</option>
+            </select>
+
+            <button type="submit" style="padding: 8px 16px;">Применить</button>
+            <a href="{% url 'novel_list' %}" style="padding: 8px 16px; background: #ddd; text-decoration: none; color: black;">Сбросить</a>
+        </form>
+    </div>
+
+    <p>
+        <a href="{% url 'novel_create' %}" style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            ➕ Добавить новую новеллу
+        </a>
+    </p>
+
+    {% if novels %}
+        <ul class="content-table">
+            {% for novel in novels %}
+                <li>
+                    <a href="{% url 'novel_detail' slug=novel.slug %}">
+                        {{ novel.title }}
+                    </a>
+                    <p><strong>Автор:</strong> {{ novel.author }}</p>
+                    <p><strong>Глав:</strong> {{ novel.chapters_count }}</p>
+                    <p><strong>Дата:</strong> {{ novel.published_date }}</p>
+
+                    <p><strong>Статус:</strong>
+                        <span style="padding: 3px 10px; border-radius: 4px; background:
+                            {% if novel.status == 'completed' %}#d4edda{% elif novel.status == 'published' %}#cce5ff{% elif novel.status == 'on_hold' %}#fff3cd{% else %}#f8d7da{% endif %};">
+                            {{ novel.get_status_display }}
+                        </span>
+                    </p>
+
+                    {% if novel.description %}
+                        <p>{{ novel.description|truncatewords:25 }}</p>
+                    {% endif %}
+
+                    <div style="margin-top: 10px;">
+                        <a href="{% url 'novel_detail' slug=novel.slug %}">Подробнее</a> |
+                        <a href="{% url 'novel_update' slug=novel.slug %}">Редактировать</a> |
+                        <a href="{% url 'novel_delete' slug=novel.slug %}" style="color:#CC0000;">Удалить</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="content-text">Новелл не найдено.</p>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'home' %}" class="control">← На главную</a>
+</div>
+{% endblock %}
