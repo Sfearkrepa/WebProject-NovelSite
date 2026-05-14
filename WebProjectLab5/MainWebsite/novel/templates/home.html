@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добро пожаловать</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        h1 { color: #333; margin-bottom: 40px; }
+        .card {
+            background: white;
+            width: 500px;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        a { text-decoration: none; color: inherit; }
+    </style>
+</head>
+<body>
+    <h1>Добро пожаловать</h1>
+
+    <a href="{% url 'novel_list' %}">
+        <div class="card"><h2>Список новелл</h2></div>
+    </a>
+
+    <a href="{% url 'author_list' %}">
+        <div class="card"><h2>Писатели</h2></div>
+    </a>
+
+    <a href="{% url 'ratings' %}">
+        <div class="card"><h2>Оценки</h2></div>
+    </a>
+
+    <a href="{% url 'go_novels' %}">
+        <div class="card" style="background:#e8f5e9;">
+            <h2>Перейти к новеллам (через redirect)</h2>
+        </div>
+    </a>
+</body>
+</html>
